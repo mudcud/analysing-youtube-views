@@ -87,13 +87,11 @@ date_12mo = df_agg['Video publish time'].max() - pd.DateOffset(months =12)
 df_time_diff_yr = df_time_diff[df_time_diff['Video publish time'] >= date_12mo]
 
 # get daily view data (first 30), median & percentiles 
-views_days = pd.pivot_table(df_time_diff_yr,index= 'days_published',values ='Views', 
-        aggfunc = [np.mean,np.median,lambda x: np.percentile(x, 80),lambda x: np.percentile(x, 20)]).reset_index()
+views_days = pd.pivot_table(df_time_diff_yr,index= 'days_published',values ='Views', aggfunc = [np.mean,np.median,lambda x: np.percentile(x, 80),lambda x: np.percentile(x, 20)]).reset_index()
 views_days.columns = ['days_published','mean_views','median_views','80pct_views','20pct_views']
 views_days = views_days[views_days['days_published'].between(0,30)]
 views_cumulative = views_days.loc[:,['days_published','median_views','80pct_views','20pct_views']] 
-views_cumulative.loc[:,['median_views','80pct_views','20pct_views']] = views_cumulative.loc[:,['median_views',
-                                    '80pct_views','20pct_views']].cumsum()
+views_cumulative.loc[:,['median_views','80pct_views','20pct_views']] = views_cumulative.loc[:,['median_views','80pct_views','20pct_views']].cumsum()
 
 
 
@@ -104,8 +102,7 @@ add_sidebar = st.sidebar.selectbox('Youtube videos analysis', ('Aggregate Metric
 if add_sidebar == 'Aggregate Metrics':
     st.write("Youbtube data analysis")
     
-    df_agg_metrics = df_agg[['Video publish time','Views','Likes','Subscribers','Shares','Comments added',
-                             'RPM(USD)','Average % viewed',
+    df_agg_metrics = df_agg[['Video publish time','Views','Likes','Subscribers','Shares','Comments added','RPM(USD)','Average % viewed',
                              'Avg_duration_sec', 'Engagement_ratio','Views / sub gained']]
     metric_date_6mo = df_agg_metrics['Video publish time'].max() - pd.DateOffset(months =6)
     metric_date_12mo = df_agg_metrics['Video publish time'].max() - pd.DateOffset(months =12)
@@ -125,16 +122,15 @@ if add_sidebar == 'Aggregate Metrics':
                 count = 0
     #get date information / trim to relevant data 
     df_agg_diff['Publish_date'] = df_agg_diff['Video publish time'].apply(lambda x: x.date())
-    df_agg_diff_final = df_agg_diff.loc[:,['Video title','Publish_date','Views','Likes','Subscribers','Shares',
-                                'Comments added','RPM(USD)',
-                                 'Average % viewed', 'Avg_duration_sec', 'Engagement_ratio','Views / sub gained']]
+    df_agg_diff_final = df_agg_diff.loc[:,['Video title','Publish_date','Views','Likes','Subscribers','Shares','Comments added','RPM(USD)',
+                                           'Average % viewed', 'Avg_duration_sec', 'Engagement_ratio','Views / sub gained']]
     
     df_agg_numeric_lst = df_agg_diff_final.median().index.tolist()
     df_to_pct = {}
     for i in df_agg_numeric_lst:
         df_to_pct[i] = '{:.1%}'.format
     
-    st.dataframe(df_agg_diff_final.style.hide().applymap(style_negative, props='color:blue;').applymap(style_positive, props='color:green;').format(df_to_pct))
+    st.dataframe(df_agg_diff_final.style.hide().applymap(style_negative, props='color:red;').applymap(style_positive, props='color:green;').format(df_to_pct))
     
 if add_sidebar == 'Individual Video Analysis':
     videos = tuple(df_agg['Video title'])

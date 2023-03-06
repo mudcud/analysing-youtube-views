@@ -44,7 +44,7 @@ def audience_simple(country):
     else:
         return 'Other'
     
-@st.cache_data
+@st.cache
 def load_data():
     """ Loads in 4 dataframes and does light feature engineering"""
     df_agg = pd.read_csv('Aggregated_Metrics_By_Video.csv').iloc[1:,:]

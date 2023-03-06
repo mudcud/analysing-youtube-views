@@ -130,7 +130,7 @@ if add_sidebar == 'Aggregate Metrics':
     for i in df_agg_numeric_lst:
         df_to_pct[i] = '{:.1%}'.format
     
-    st.dataframe(df_agg_diff_final.style.hide().applymap(style_negative, props='color:red;').applymap(style_positive, props='color:green;').format(df_to_pct))
+    st.dataframe(df_agg_diff_final.style.hide().applymap(style_negative, props='color:blue;').applymap(style_positive, props='color:green;').format(df_to_pct))
     
 if add_sidebar == 'Individual Video Analysis':
     videos = tuple(df_agg['Video title'])
